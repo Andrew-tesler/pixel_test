@@ -15,7 +15,7 @@ np[1] = (12, 0, 50)
 np[2] = (0, 12, 0)
 np[3] = (0, 0, 50)
 np.write()
-sleep(3)
+# sleep(3)
 pixel = [0, 1, 2]      # set first pixel to black
 
 while True:
