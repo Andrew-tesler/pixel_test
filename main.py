@@ -11,11 +11,11 @@ pin = Pin(4, Pin.OUT)   # set GPIO0 to output to drive NeoPixels
 np = NeoPixel(pin, 4)   # create NeoPixel driver on GPIO0 for 8 pixels
 
 np[0] = (0, 0, 0)
-np[1] = (125, 0, 50)
-np[2] = (0, 124, 0)
+np[1] = (12, 0, 50)
+np[2] = (0, 12, 0)
 np[3] = (0, 0, 50)
 np.write()
-# sleep(3)
+sleep(3)
 pixel = [0, 1, 2]      # set first pixel to black
 
 while True:
