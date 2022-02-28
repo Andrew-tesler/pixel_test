@@ -3,12 +3,20 @@
 from neopixel import NeoPixel
 from machine import Pin
 from time import sleep
-import random
+from random import *
+from urandom import *
+
+
+LED_COUNT = 4
 
 print('Testing')
 
+import random
+x = random.getrandbits(32)
+print("{}".format(x))
+
 pin = Pin(4, Pin.OUT)   # set GPIO0 to output to drive NeoPixels
-np = NeoPixel(pin, 4)   # create NeoPixel driver on GPIO0 for 8 pixels
+np = NeoPixel(pin, LED_COUNT)   # create NeoPixel driver on GPIO0 for 4 pixels
 
 np[0] = (0, 0, 0)
 np[1] = (12, 0, 50)
@@ -17,6 +25,49 @@ np[3] = (0, 0, 50)
 np.write()
 # sleep(3)
 pixel = [0, 1, 2]      # set first pixel to black
+
+
+def randrange(start, stop=None):
+    if stop is None:
+        stop = start
+        start = 0
+    upper = stop - start
+    bits = 0
+    pwr2 = 1
+    while upper > pwr2:
+        pwr2 <<= 1
+        bits += 1
+    while True:
+        r = getrandbits(bits)
+        if r < upper:
+            break
+    return r + start
+
+
+def randint(start, stop):
+    return randrange(start, stop + 1)
+
+# fade function from Adafruit NeoPixel library
+def fade(np, pixel, brightness):
+    """Fade the given pixel in and out."""
+    for i in range(0, 255):
+        np[pixel] = (i, i, i)
+        np.write()
+        sleep(0.01)
+    for i in range(255, 0, -1):
+        np[pixel] = (i, i, i)
+        np.write()
+        sleep(0.01)
+
+# blink all leds at random intervals and random colours
+while True:
+    for i in range(LED_COUNT):
+        np[i] = (randint(0, 125), randint(0, 125), randint(0, 125))
+        np.write()
+        
+        # sleep(0.1)
+    sleep(randint(1, 3))   
+
 
 while True:
     p = 0
