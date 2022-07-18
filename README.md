@@ -12,7 +12,8 @@ Code upload to the board implimented using pyboard.py
 
 # example useage of pyboard.py
 
-    - Upload the code to the board and run main.py
+- Upload the code to the board and run main.py
+
     python.exe .\pyboard.py -d COM10 main.py
 
 
