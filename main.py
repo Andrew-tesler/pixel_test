@@ -2,7 +2,7 @@
 # from machine import Pin
 # from adafruit_pixelbuf import PixelBuf
 from neopixel import NeoPixel
-from machine import Pin, ADC
+from machine import Pin, ADC, RTC
 from time import sleep
 from random import *
 from urandom import *
@@ -27,7 +27,7 @@ STRIP_ARRAY = [[0 for x in range(3)] for y in range(LED_COUNT)]
 # Init the LED strip
 strip = NeoPixel(NEOPIXEL_PIN, LED_COUNT, timing=1)
 
-print(STRIP_ARRAY)
+# print(STRIP_ARRAY)
 # run over the LED strip and set the color to black
 for i in range(LED_COUNT):
     strip[i] = (0, 0, 0)
@@ -42,6 +42,11 @@ print("Strip pixel count: ", strip.n)
 adc = ADC(Pin(26))     # create ADC object on ADC pin
 adc.read_u16()         # read value, 0-65535 across voltage range 0.0v - 3.3v
 print("Analog input pin: ", adc.read_u16() )
+
+rtc = RTC()
+rtc.datetime((2022, 7, 19, 2, 12, 30, 0, 0)) # set a specific date and
+                                             # time, eg. 2017/8/23 1:12:48
+print(rtc.datetime()) # get date and time
 
 # # Testing the LED strip
 # STRIP_ARRAY[2] = [125, 0, 10]
