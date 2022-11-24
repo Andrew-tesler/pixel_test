@@ -8,6 +8,26 @@ from urandom import *
 
 
 LED_COUNT = 24
+#TODO - strucure the code for additinal lamps and add a function to set the color of all lamps
+
+# There is several Mushrooms each with diferent size ( LED QTY ) 
+# Global Button to turn on/off all Mushrooms
+# Global Brightness control
+# Global Color control
+# Global Color change speed control
+
+# Array of mushroom leds QTY
+MUSHROOMS = [24, 12, 6, 3, 1]
+
+MAX_BRIGHTNESS = 255
+MIN_BRIGHTNESS = 0
+GLOBAL_BRIGHTNESS = 255
+
+GLOBAL_COLOR = (0, 0, 0)
+GLOBAL_COLOR_CHANGE_SPEED = 0.1
+
+
+
 
 print('Testing')
 
@@ -26,7 +46,7 @@ np = NeoPixel(pin, LED_COUNT)   # create NeoPixel driver on GPIO0 for 4 pixels
 # # sleep(3)
 # pixel = [0, 1, 2]      # set first pixel to black
 
-MAX_BRIGHTNESS = 255
+MAX_BRIGHTNESS = 50
 TRANSITION_TIME = 0.01
 
 
