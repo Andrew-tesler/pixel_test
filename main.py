@@ -26,9 +26,9 @@ GLOBAL_COLOR_CHANGE_SPEED = 0.1
 
 # dictioanry to hold the lamp data leds, pin, brightness, color, speed
 # lamps = { 'lamp1': {'leds': 24, 'pin': 2, 'brightness': 0.5, 'color': (255, 0, 0), 'speed': 0.5}, 'lamp2': {'leds': 12, 'pin': 4, 'brightness': 0.5, 'color': (0, 255, 0), 'speed': 0.5}, 'lamp3': {'leds': 6, 'pin': 5, 'brightness': 0.5, 'color': (0, 0, 255), 'speed': 0.5} }
-MUSHROOMS = {'mush1' : {'leds': 24, 'pin': 2, 'brightness': 0.5, 'color': (20, 0, 0), 'speed': 0.5},
+MUSHROOMS = {'mush1' : {'leds': 24, 'pin': 2, 'brightness': 0.5, 'color': (20, 0, 15), 'speed': 0.5},
             'mush2' : {'leds': 24, 'pin': 3, 'brightness': 0.5, 'color': (0, 20, 0), 'speed': 0.5}, 
-            'mush3' : {'leds': 16, 'pin': 4, 'brightness': 0.5, 'color': (0, 0, 20), 'speed': 0.5} }
+            'mush3' : {'leds': 16, 'pin': 4, 'brightness': 0.5, 'color': (0, 5, 20), 'speed': 0.5} }
 
 
 # TODO - add a function to set the color of all lamps
