@@ -9,9 +9,9 @@ from urandom import *
 import random
 x = random.getrandbits(24)
 
-MAX_BRIGHTNESS = 255
+MAX_BRIGHTNESS = 125
 MIN_BRIGHTNESS = 0
-GLOBAL_BRIGHTNESS = 255
+GLOBAL_BRIGHTNESS = 25
 
 GLOBAL_COLOR = (0, 0, 0)
 GLOBAL_COLOR_CHANGE_SPEED = 0.1
