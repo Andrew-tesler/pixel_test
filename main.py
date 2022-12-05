@@ -10,16 +10,16 @@ from urandom import *
 import random
 x = random.getrandbits(24)
 
-MAX_BRIGHTNESS = 125
+MAX_BRIGHTNESS = 70
 MIN_BRIGHTNESS = 0
 GLOBAL_BRIGHTNESS = 25
 
 GLOBAL_COLOR = (0, 0, 0)
 GLOBAL_COLOR_CHANGE_SPEED = 0.1
 
-#TODO - strucure the code for additinal lamps and add a function to set the color of all lamps
+# TODO - strucure the code for additinal lamps and add a function to set the color of all lamps
 
-# There is several Mushrooms each with diferent size ( LED QTY ) 
+# There is several Mushrooms each with diferent size ( LED QTY )
 # Global Button to turn on/off all Mushrooms
 # Global Brightness control
 # Global Color control
@@ -27,18 +27,19 @@ GLOBAL_COLOR_CHANGE_SPEED = 0.1
 
 # dictioanry to hold the lamp data leds, pin, brightness, color, speed
 # lamps = { 'lamp1': {'leds': 24, 'pin': 2, 'brightness': 0.5, 'color': (255, 0, 0), 'speed': 0.5}, 'lamp2': {'leds': 12, 'pin': 4, 'brightness': 0.5, 'color': (0, 255, 0), 'speed': 0.5}, 'lamp3': {'leds': 6, 'pin': 5, 'brightness': 0.5, 'color': (0, 0, 255), 'speed': 0.5} }
-MUSHROOMS = {'mush1' : {'leds': 24, 'pin': 2, 'brightness': 0.5, 'color': (20, 0, 15), 'speed': 1,'time': 0},
-            'mush2' : {'leds': 24, 'pin': 3, 'brightness': 0.5, 'color': (0, 20, 0), 'speed': 5,'time': 0}, 
-            'mush3' : {'leds': 8, 'pin': 6, 'brightness': 0.5, 'color': (50, 0, 0), 'speed': 0.01,'time': 0},
-            'mush4' : {'leds': 8, 'pin': 7, 'brightness': 0.5, 'color': (0, 50, 0), 'speed': 1,'time': 0},
-            'mush5' : {'leds': 8, 'pin': 8, 'brightness': 0.5, 'color': (0, 0, 50), 'speed': 5,'time': 0} }
+MUSHROOMS = {'mush1': {'leds': 24, 'pin': 2, 'brightness': 20, 'color': (20, 0, 15), 'speed': 10000, 'time': 0, 'dir': 0},
+             'mush2': {'leds': 24, 'pin': 3, 'brightness': 20, 'color': (0, 20, 0), 'speed': 10000, 'time': 0, 'dir': 1},
+             'mush3': {'leds': 8, 'pin': 6, 'brightness': 20, 'color': (50, 0, 0), 'speed': 10000, 'time': 0, 'dir': 0},
+             'mush4': {'leds': 8, 'pin': 7, 'brightness': 20, 'color': (0, 50, 0), 'speed': 10000, 'time': 0, 'dir': 1},
+             'mush5': {'leds': 8, 'pin': 8, 'brightness': 20, 'color': (0, 0, 50), 'speed': 10000, 'time': 0, 'dir': 0},
+             'mush6': {'leds': 16, 'pin': 4, 'brightness': 20, 'color': (0, 25, 50), 'speed': 10000, 'time': 0, 'dir': 1}}
 
 
 # TODO - add a function to set the color of all lamps
 # TODO - add a function to set the brightness of all lamps
 # TODO - add a function to set the speed of all lamps
 
-# set the color of a lamp 
+# set the color of a lamp
 def set_color(lamp, color):
     if lamp in MUSHROOMS:
         if MAX_BRIGHTNESS >= color[0] >= MIN_BRIGHTNESS and MAX_BRIGHTNESS >= color[1] >= MIN_BRIGHTNESS and MAX_BRIGHTNESS >= color[2] >= MIN_BRIGHTNESS:
@@ -46,58 +47,125 @@ def set_color(lamp, color):
             MUSHROOMS[lamp]['color'] = color
             # print('color set to: ', color)
 
-# set lamp time 
+
+### Time functions ###
+# get time right now
+def get_time():
+    return time.time()
+
+
+# set lamp time
 def set_time(lamp, time):
     if lamp in MUSHROOMS:
         MUSHROOMS[lamp]['time'] = time
 
+
+# Get Lamp time
 def get_lmp_time(lamp):
     if lamp in MUSHROOMS:
         return MUSHROOMS[lamp]['time']
 
-# get time right now
-def get_time():
-    return time.time()
-   
-# store the time of all lamps
+
+# Store the time for the lamp
 def store_time(lamp):
-    if lamp in MUSHROOMS:   
-        MUSHROOMS[lamp]['time'] = get_time()
+    if lamp in MUSHROOMS:
+        # time.ticks_us()
+        MUSHROOMS[lamp]['time'] = time.ticks_us()
 
 
 # check if the time of a lamp is over
 def check_time(lamp):
     if lamp in MUSHROOMS:
-        if get_time() - get_lmp_time(lamp) > MUSHROOMS[lamp]['speed']:
+        if time.ticks_diff(time.ticks_us(), MUSHROOMS[lamp]['time']) >  MUSHROOMS[lamp]['speed']:
+            # print('time diff: ', time.ticks_diff(time.ticks_us(), MUSHROOMS[lamp]['time']))
+        # if get_time() - get_lmp_time(lamp) > MUSHROOMS[lamp]['speed']:  # type: ignore
             store_time(lamp)
             return True
         else:
             return False
 
-# print check time of all lamps
+
+# print check time result of all lamps
 def print_check_time():
     for lamp in MUSHROOMS:
         print(lamp, check_time(lamp))
 
-print_check_time()
-print_check_time()
-# sleep(3)
-print_check_time()
-# Generate a random color
+
+# set the brightness of a lamp
+def set_brightness(lamp, brightness):
+    if lamp in MUSHROOMS:
+        if MAX_BRIGHTNESS >= brightness >= MIN_BRIGHTNESS:
+            MUSHROOMS[lamp]['brightness'] = brightness
+
+
+
+
+### Color functions ###
+
+# Generate random color
 def random_color():
     return (randrange(MIN_BRIGHTNESS, MAX_BRIGHTNESS), randrange(MIN_BRIGHTNESS, MAX_BRIGHTNESS), randrange(MIN_BRIGHTNESS, MAX_BRIGHTNESS))
 
+# Fade the color of a lamp
+def fade_color(lamp):
+    if lamp in MUSHROOMS:
+        if check_time(lamp):
+            color = MUSHROOMS[lamp]['color']
+            # check if direction is 0 (up) or 1 (down)
+            if MUSHROOMS[lamp]['dir'] == 0:
+                # check if the color is not at max
+                if color[0] < MAX_BRIGHTNESS and color[1] < MAX_BRIGHTNESS and color[2] < MAX_BRIGHTNESS:
+                    # r = color[0]
+                    # g = color[1]
+                    # b = color[2]
+                    # # increase the color only on non zero values
+                    # if color[0] != 0:
+                    #     r = (color[0]+1)
+                    # elif color[1] != 0:
+                    #     g = (color[1]+1)
+                    # elif color[2] != 0:
+                    #     b = (color[2]+1)
+                    # # set the color
+                    # color = (r, g, b)
+                    color = (color[0] + 1, color[1] + 1, color[2] + 1)
+                    # set_color
+                    set_color(lamp, color)
 
+                    print('color lamp: ',lamp,' up: ', color)
+                else:
+                    # set the direction to down
+                    MUSHROOMS[lamp]['dir'] = 1
+            else:
+                # check if the color is not at min
+                if color[0] > MIN_BRIGHTNESS and color[1] > MIN_BRIGHTNESS and color[2] > MIN_BRIGHTNESS:
+                    # r = color[0]
+                    # g = color[1]
+                    # b = color[2]
+                    # # decrease the color
+                    # if color[0] != 0:
+                    #     r = (color[0]-1)
+                    # elif color[1] != 0:
+                    #     g = (color[1]-1)
+                    # elif color[2] != 0:
+                    #     b = (color[2]-1)
+                    # color = (r, g, b)
+                    color = (color[0] - 1, color[1] - 1, color[2] - 1)
+                    # set the color
+                    set_color(lamp, color)
+                    print('color lamp: ',lamp,' down: ', color)
+                else:
+                    # set the direction to up
+                    MUSHROOMS[lamp]['dir'] = 0
+            # print('color before: ', color)
+            
+            # print('color after: ', color)
+           
 
-set_color('mush1', random_color())
-set_color('mush2', random_color())
-set_color('mush3', random_color())
-set_color('mush4', random_color())
-set_color('mush5', random_color())
-
-
-
-
+# set_color('mush1', random_color())
+# set_color('mush2', random_color())
+# set_color('mush3', random_color())
+# set_color('mush4', random_color())
+# set_color('mush5', random_color())
 
 
 # Print Welcome message for debugging purposes
@@ -108,7 +176,8 @@ print(MUSHROOMS)
 
 # init the lamps
 for lamp in MUSHROOMS:
-    MUSHROOMS[lamp]['np'] = NeoPixel(Pin(MUSHROOMS[lamp]['pin']), MUSHROOMS[lamp]['leds'])
+    MUSHROOMS[lamp]['np'] = NeoPixel(
+        Pin(MUSHROOMS[lamp]['pin']), MUSHROOMS[lamp]['leds'])
 
 # turn on all lamps
 for lamp in MUSHROOMS:
@@ -120,17 +189,16 @@ print("{}".format(x))
 # loop through the lamps and set the color of each lamp each time the loop runs
 while True:
     for lamp in MUSHROOMS:
-        set_color(lamp, random_color())
-        # check if the time of the lamp is over
-        if check_time(lamp):
+        # fade_color(lamp)
             # set the color of the lamp
-            MUSHROOMS[lamp]['np'].fill(MUSHROOMS[lamp]['color'])
-            MUSHROOMS[lamp]['np'].write()
+        MUSHROOMS[lamp]['np'].fill((0,125,0))
+        
+        # MUSHROOMS[lamp]['np'].fill(MUSHROOMS[lamp]['color'])
+        
         # change the color of the lamp only if time has passed
         # if time has passed change the color of the lamp
         # if time has not passed do nothing
-        
-
+    MUSHROOMS[lamp]['np'].write()
     # sleep(0.01)
 
 # # # Global defines for the LED strip
@@ -146,7 +214,7 @@ while True:
 
 # init all led strips to off
 # for i in range(LED_COUNT):
-    
+
 # # turn all LEDs on green color
 # np.fill((0, 125, 25))
 # np.write()
@@ -218,7 +286,7 @@ while True:
 #     for i in range(0, 24):
 #         fade_in(np, i, (0, 0, MAX_BRIGHTNESS), 10, TRANSITION_TIME)
 #         sleep(0.1)
-    
+
 #     for i in range(0, 24):
 #         fade_out(np, i, (0, 0, MAX_BRIGHTNESS), 10, TRANSITION_TIME)
 #         sleep(0.1)
@@ -310,9 +378,9 @@ while True:
 # #     # for i in range(LED_COUNT):
 # #     #     np[i] = pixel_r
 # #     #     np.write()
-        
+
 # #     sleep(0.1)
-# #     # sleep(randint(1, 3))   
+# #     # sleep(randint(1, 3))
 
 
 # # while True:
@@ -408,9 +476,9 @@ while True:
 # #     for i in range(LED_COUNT):
 # #         np[i] = (randint(0, 125), randint(0, 125), randint(0, 125))
 # #         np.write()
-        
+
 # #         # sleep(0.1)
-# #     sleep(randint(1, 3))   
+# #     sleep(randint(1, 3))
 
 
 # # while True:
@@ -460,13 +528,6 @@ while True:
 # # #         np[0] = (0, 0, 255-i)
 # # #         np.write()
 # # #         sleep(0.01)
-   
-
-
-
-
-
-        
 
 
 # # # np[0] = (125, 255, 0) # set the first pixel to white
