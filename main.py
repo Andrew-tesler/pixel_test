@@ -38,6 +38,8 @@ MUSHROOMS = {'mush1': {'leds': 24, 'pin': 2, 'brightness': 20, 'color': (0, 1, 1
 # TODO - add a function to set the color of all lamps
 # TODO - add a function to set the brightness of all lamps
 # TODO - add a function to set the speed of all lamps
+# TODO - add a function to set initial color of each lamp or change the fade function
+
 
 # set the color of a lamp
 def set_color(lamp, color):
