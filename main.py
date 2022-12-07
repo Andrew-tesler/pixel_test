@@ -27,12 +27,12 @@ GLOBAL_COLOR_CHANGE_SPEED = 0.1
 
 # dictioanry to hold the lamp data leds, pin, brightness, color, speed
 # lamps = { 'lamp1': {'leds': 24, 'pin': 2, 'brightness': 0.5, 'color': (255, 0, 0), 'speed': 0.5}, 'lamp2': {'leds': 12, 'pin': 4, 'brightness': 0.5, 'color': (0, 255, 0), 'speed': 0.5}, 'lamp3': {'leds': 6, 'pin': 5, 'brightness': 0.5, 'color': (0, 0, 255), 'speed': 0.5} }
-MUSHROOMS = {'mush1': {'leds': 24, 'pin': 2, 'brightness': 20, 'color': (0, 1, 1), 'speed': 10000, 'time': 0, 'dir': 1, 'max_color': (0,70,70)},
-             'mush2': {'leds': 24, 'pin': 3, 'brightness': 20, 'color': (1, 1, 0), 'speed': 10000, 'time': 0, 'dir': 1, 'max_color': (30,25,0)},
+MUSHROOMS = {'mush1': {'leds': 24, 'pin': 2, 'brightness': 20, 'color': (0, 1, 1), 'speed': 1000000, 'time': 0, 'dir': 1, 'max_color': (0,70,70)},
+             'mush2': {'leds': 24, 'pin': 3, 'brightness': 20, 'color': (1, 1, 0), 'speed': 1000000, 'time': 0, 'dir': 1, 'max_color': (30,25,0)},
              'mush3': {'leds': 16, 'pin': 4, 'brightness': 20, 'color': (0, 0, 1), 'speed': 10000, 'time': 0, 'dir': 0, 'max_color': (0,0,50)},
-             'mush4': {'leds': 8, 'pin': 6, 'brightness': 20, 'color': (1, 0, 1), 'speed': 1000, 'time': 0, 'dir': 1, 'max_color': (125,0,50)},
-             'mush5': {'leds': 8, 'pin': 7, 'brightness': 20, 'color': (0, 1, 0), 'speed': 1000, 'time': 0, 'dir': 0, 'max_color': (0,50,0)},
-             'mush6': {'leds': 8, 'pin': 8, 'brightness': 20, 'color': (0, 0, 1), 'speed': 1000, 'time': 0, 'dir': 1, 'max_color': (0,0,100)}}
+             'mush4': {'leds': 8, 'pin': 6, 'brightness': 20, 'color': (1, 0, 1), 'speed': 10000, 'time': 0, 'dir': 1, 'max_color': (50,0,50)},
+             'mush5': {'leds': 8, 'pin': 7, 'brightness': 20, 'color': (0, 0, 1), 'speed': 1000, 'time': 0, 'dir': 0, 'max_color': (0,0,100)},
+             'mush6': {'leds': 8, 'pin': 8, 'brightness': 20, 'color': (0, 1, 0), 'speed': 10000, 'time': 0, 'dir': 1, 'max_color': (0,100,0)}}
 
 
 # TODO - add a function to set the color of all lamps
@@ -202,6 +202,8 @@ while True:
 
     sleep(0.1) # sleep for 0.1 seconds for debugging purposes
     for lamp in MUSHROOMS:
+        MUSHROOMS[lamp]['np'].fill(MUSHROOMS[lamp]['color'])
+        MUSHROOMS[lamp]['np'].write()
         # check all mushrooms if the time is over
         if check_time(lamp):
             if MUSHROOMS[lamp]['dir'] == 1:
@@ -213,14 +215,13 @@ while True:
 
     
             # fill the lamp with the new color
-            MUSHROOMS[lamp]['np'].fill(MUSHROOMS[lamp]['color'])
-            MUSHROOMS[lamp]['np'].write()
+
 
 
             # fade the lamp color
-            fade_color(lamp, 1)
-            # set the lamp color
-            set_color(lamp, MUSHROOMS[lamp]['color'])
+            # fade_color(lamp, 1)
+            # # set the lamp color
+            # set_color(lamp, MUSHROOMS[lamp]['color'])
             # print the lamp color
             # print(lamp, MUSHROOMS[lamp]['color'])
             # print the lamp brightness
